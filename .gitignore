@@ -30,3 +30,13 @@
 *.exe
 *.out
 *.app
+
+# My Definition
+.DS_Store
+build/
+release-build/
+cmake-build-debug/
+.idea/
+.DS_Store
+_old/
+.vscode/
