@@ -26,7 +26,7 @@ auto load_random_data(std::ifstream& ifs, uint64_t samples, uint64_t data_dim) {
 
 template <int t_flags>
 void run_cws(const std::string& data_list, const std::string& random_fn, uint32_t data_dim,
-             uint32_t num_samples, uint32_t alph_bits, uint32_t begin_id) {
+             uint32_t num_samples, uint32_t alph_bits, uint32_t begin_id, uint32_t workers) {
   using data_iterator_type = data_iterator<t_flags>;
   using elem_type = typename data_iterator_type::elem_type;
 
@@ -114,7 +114,7 @@ void run_cws(const std::string& data_list, const std::string& random_fn, uint32_
     std::cout << output_fn << " is done...\n";
   };
 
-  parallel_for_each(data_fns, sample);
+  parallel_for_each(data_fns, sample, workers);
 }
 
 template <int t_flags, typename... t_args>
@@ -144,6 +144,7 @@ int main(int argc, char** argv) {
   p.add<bool>("weighted", 'w', "Does the input data have weight?", false, false);
   p.add<bool>("generalized", 'g', "Does the input data need to be generalized?", false, false);
   p.add<bool>("labeled", 'l', "Does each input vector have a label at the head?", false, false);
+  p.add<uint32_t>("workers", 'w', "max # of threads", false, 8);
   p.parse_check(argc, argv);
 
   auto data_list = p.get<std::string>("data_list");
@@ -155,9 +156,10 @@ int main(int argc, char** argv) {
   auto weighted = p.get<bool>("weighted");
   auto generalized = p.get<bool>("generalized");
   auto labeled = p.get<bool>("labeled");
+  auto workers = p.get<uint32_t>("workers");
 
   auto flags = make_flags(weighted, generalized, labeled);
-  run_cws_with_flags<0>(flags, data_list, random_fn, dim, samples, bits, begin_id);
+  run_cws_with_flags<0>(flags, data_list, random_fn, dim, samples, bits, begin_id, workers);
 
   return 0;
 }

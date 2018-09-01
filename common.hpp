@@ -183,15 +183,15 @@ inline T read_value(std::istream& is) {
 }
 
 // http://yuta1402.hatenablog.jp/entry/2017/12/15/233615
-template <class Iterator, class Function, size_t MaxWorkers = 8>
-inline Function parallel_for_each(Iterator begin, Iterator end, Function f) {
+template <class Iterator, class Function>
+inline Function parallel_for_each(Iterator begin, Iterator end, Function f, size_t max_workers = 8) {
   if (begin == end) {
     return std::move(f);
   }
 
   std::size_t num_threads = std::thread::hardware_concurrency();
-  if (num_threads == 0 or MaxWorkers < num_threads) {
-    num_threads = MaxWorkers;
+  if ((num_threads == 0) or (max_workers < num_threads)) {
+    num_threads = max_workers;
   }
 
   std::cout << "Use " << num_threads << " threads\n";
@@ -212,8 +212,8 @@ inline Function parallel_for_each(Iterator begin, Iterator end, Function f) {
 }
 
 template <class Container, class Function>
-inline Function parallel_for_each(Container&& c, Function f) {
-  return parallel_for_each(std::begin(c), std::end(c), f);
+inline Function parallel_for_each(Container&& c, Function f, size_t max_workers = 8) {
+  return parallel_for_each(std::begin(c), std::end(c), f, max_workers);
 }
 
 }  // namespace cws
