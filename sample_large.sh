@@ -12,6 +12,10 @@ split -l 20000 -a 1 combined_scale split-data/combined_scale-
 find $PWD/split-data/* > data-list.txt
 
 ./gen_random_data -r combined_scale.rnd -m 100 -s 32 -g 1
-./cws_large -d data-list.txt -r combined_scale.rnd -m 100 -s 32 -b 4 -i 1 -w 1 -g 1 -l 1
+./cws_large -d data-list.txt -r combined_scale.rnd -m 100 -s 32 -b 4 -i 1 -w 1 -g 1 -l 1 -t 4
 
 find split-data/*.cws | xargs head
+
+./concatenate -d data-list.txt -o combined_scale
+
+head combined_scale.cws
