@@ -46,8 +46,11 @@ int main(int argc, char** argv) {
 
   uint64_t size = dim * samples;
 
+  std::cout << "1) Generating random data with gamma_distribution\n";
   gen_random_matrix(gamma_t(2.0, 1.0), ofs, size);
+  std::cout << "2) Generating random data with gamma_distribution\n";
   gen_random_matrix(gamma_t(2.0, 1.0), ofs, size);
+  std::cout << "3) Generating random data with uniform_real_distribution\n";
   gen_random_matrix(uniform_t(2.0, 1.0), ofs, size);
 
   return 0;
