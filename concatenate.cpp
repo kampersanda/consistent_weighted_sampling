@@ -10,7 +10,7 @@ int main(int argc, char** argv) {
   p.parse_check(argc, argv);
 
   auto data_list = p.get<std::string>("data_list");
-  auto output_fn = p.get<std::string>("output_fn") + ".cws";
+  auto output_fn = p.get<std::string>("output_fn");
 
   std::vector<std::string> data_fns;
   {
@@ -36,19 +36,13 @@ int main(int argc, char** argv) {
   }
 
   for (size_t i = 0; i < data_fns.size(); ++i) {
-    std::string cws_fn = data_fns[i] + ".cws";
-    std::ifstream ifs(cws_fn);
+    std::ifstream ifs(data_fns[i]);
     if (!ifs) {
-      std::cerr << "open error: " << cws_fn << "\n";
+      std::cerr << "open error: " << data_fns[i] << "\n";
       exit(1);
     }
 
-    std::string line;
-    if (i != 0) {
-      // skip header
-      std::getline(ifs, line);
-    }
-    while (std::getline(ifs, line)) {
+    for (std::string line; std::getline(ifs, line);) {
       ofs << line << '\n';
     }
   }

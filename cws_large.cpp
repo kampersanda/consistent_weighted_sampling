@@ -71,14 +71,14 @@ void run_cws(const std::string& data_list, const std::string& random_fn, uint32_
   auto sample = [&](const std::string& data_fn) {
     data_iterator_type data_it(data_fn, begin_id);
 
-    auto output_fn = data_fn + ".cws";
-    std::ofstream ofs(output_fn);
+    std::ostringstream outfn_oss;
+    outfn_oss << data_fn << "." << num_samples << "." << alph_bits << ".cws";
+
+    std::ofstream ofs(outfn_oss.str());
     if (!ofs) {
-      std::cerr << "open error: " << output_fn << '\n';
+      std::cerr << "open error: " << outfn_oss.str() << '\n';
       return;
     }
-
-    ofs << num_samples << ' ' << alph_bits << '\n';  // header
 
     for (std::vector<elem_type> data_vec; data_it.next(data_vec);) {
       for (uint64_t i = 0; i < num_samples; ++i) {
@@ -111,7 +111,7 @@ void run_cws(const std::string& data_list, const std::string& random_fn, uint32_
       ofs << '\n';
     }
 
-    std::cout << output_fn << " is done...\n";
+    std::cout << outfn_oss.str() << " is done...\n";
   };
 
   parallel_for_each(data_fns, sample, workers);

@@ -53,17 +53,16 @@ void run_cws(const std::string& data_fn, const std::string& random_fn, uint32_t 
 
   std::cout << "Sampling..." << std::endl;
 
-  auto output_fn = data_fn + ".cws";
-  std::ofstream ofs(output_fn);
+  std::ostringstream outfn_oss;
+  outfn_oss << data_fn << "." << num_samples << "." << alph_bits << ".cws";
+  std::ofstream ofs(outfn_oss.str());
   if (!ofs) {
-    std::cerr << "open error: " << output_fn << '\n';
+    std::cerr << "open error: " << outfn_oss.str() << '\n';
     exit(1);
   }
 
-  ofs << num_samples << ' ' << alph_bits << '\n';  // header
-  uint32_t alph_mask = (1 << alph_bits) - 1;
-
   data_iterator_type data_it(data_fn, begin_id);
+  uint32_t alph_mask = (1 << alph_bits) - 1;
 
   for (std::vector<elem_type> data_vec; data_it.next(data_vec);) {
     for (uint64_t i = 0; i < num_samples; ++i) {

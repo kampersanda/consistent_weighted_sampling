@@ -15,7 +15,8 @@ find $PWD/split-data/* > data-list.txt
 ./cws_large -d data-list.txt -r combined_scale.rnd -m 100 -s 32 -b 4 -i 1 -w 1 -g 1 -l 1 -t 4
 
 find split-data/*.cws | xargs head
+find $PWD/split-data/*.cws > cws-list.txt
 
-./concatenate -d data-list.txt -o combined_scale
+./concatenate -d cws-list.txt -o combined_scale.32.4.cws
 
-head combined_scale.cws
+head combined_scale.32.4.cws
