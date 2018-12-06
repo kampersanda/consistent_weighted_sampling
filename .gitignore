@@ -40,5 +40,5 @@ cmake-build-debug/
 .DS_Store
 _old/
 .vscode/
-sample_build/
-sample_large_build/
+sample-build/
+sample-large-build/

@@ -89,7 +89,10 @@ void run_cws(const std::string& data_fn, const std::string& random_fn, uint32_t 
         exit(1);
       }
 
-      ofs << (min_id & alph_mask) << ' ';
+      ofs << (min_id & alph_mask);
+      if (i + 1 < num_samples) {
+        ofs << ' ';
+      }
     }
 
     ofs << '\n';
