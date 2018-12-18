@@ -141,8 +141,8 @@ int main(int argc, char** argv) {
   p.add<std::string>("data_list", 'd', "list of input file names of data vectors", true);
   p.add<std::string>("random_fn", 'r', "input file name of random matricies", true);
   p.add<uint32_t>("dim", 'm', "dimension of the input data", true);
-  p.add<uint32_t>("samples", 's', "#samples in CWS", false, 16);
-  p.add<uint32_t>("bits", 'b', "#bits for each sample", false, 3);
+  p.add<uint32_t>("samples", 's', "#samples in CWS", false, 64);
+  p.add<uint32_t>("bits", 'b', "#bits for each sample", false, 4);
   p.add<uint32_t>("begin_id", 'i', "beginning ID of data column", false, 0);
   p.add<bool>("weighted", 'w', "Does the input data have weight?", false, false);
   p.add<bool>("generalized", 'g', "Does the input data need to be generalized?", false, false);
