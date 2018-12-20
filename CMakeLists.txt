@@ -15,5 +15,6 @@ message(STATUS "CXX_FLAGS_RELEASE are ${CMAKE_CXX_FLAGS_RELEASE}")
 
 add_executable(cws cws.cpp)
 add_executable(cws_large cws_large.cpp)
+add_executable(cws_BIGANN cws_BIGANN.cpp)
 add_executable(gen_random_data gen_random_data.cpp)
 add_executable(concatenate concatenate.cpp)
