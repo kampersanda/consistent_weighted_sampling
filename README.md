@@ -1,10 +1,10 @@
-# zero\_bit\_cws
+# consistent\_weighted\_sampling
 
 ## How to build
 
 ```
-$ git clone https://github.com/kampersanda/zero_bit_cws.git
-$ cd zero_bit_cws
+$ git clone https://github.com/kampersanda/consistent_weighted_sampling.git
+$ cd consistent_weighted_sampling
 $ mkdir build && cd build && cmake ..
 $ make
 ```
