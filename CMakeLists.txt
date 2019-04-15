@@ -1,10 +1,10 @@
 cmake_minimum_required(VERSION 2.8)
 
-project(cws)
+project(consistent_weighted_sampling)
 
 set(GCC_WARNINGS "-Wall")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++1z -pthread ${GCC_WARNINGS}")
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DNDEBUG -march=native")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DNDEBUG -march=native -O3")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0 -ggdb -DDEBUG")
 
 if (NOT CMAKE_BUILD_TYPE)
@@ -16,8 +16,8 @@ message(STATUS "CXX_FLAGS are ${CMAKE_CXX_FLAGS}")
 message(STATUS "CXX_FLAGS_DEBUG are ${CMAKE_CXX_FLAGS_DEBUG}")
 message(STATUS "CXX_FLAGS_RELEASE are ${CMAKE_CXX_FLAGS_RELEASE}")
 
-add_executable(gen_rand gen_rand.cpp)
-add_executable(cws_ANN cws_ANN.cpp)
+add_executable(generate_random_matrix generate_random_matrix.cpp)
+add_executable(cws_TEXMEX cws_TEXMEX.cpp)
 add_executable(cws_ASCII cws_ASCII.cpp)
 add_executable(to_txt to_txt.cpp)
 add_executable(sample sample.cpp)

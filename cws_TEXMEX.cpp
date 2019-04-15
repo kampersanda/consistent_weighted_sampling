@@ -6,7 +6,7 @@
 
 template <typename T>
 int run(const cmdline::parser& p) {
-  auto dat_fn = p.get<string>("dat_fn");
+  auto base_fn = p.get<string>("base_fn");
   auto rand_fn = p.get<string>("rand_fn");
   auto cws_fn = p.get<string>("cws_fn");
   auto dat_dim = p.get<size_t>("dat_dim");
@@ -22,9 +22,9 @@ int run(const cmdline::parser& p) {
     cout << "The data are consuming " << MiB << " MiB..." << endl;
   }
 
-  ifstream ifs(dat_fn);
+  ifstream ifs(base_fn);
   if (!ifs) {
-    cerr << "Open error: " << dat_fn << endl;
+    cerr << "open error: " << base_fn << endl;
     return 1;
   }
 
@@ -41,7 +41,7 @@ int run(const cmdline::parser& p) {
 
   ofstream ofs(cws_fn);
   if (!ofs) {
-    cerr << "Open error: " << cws_fn << endl;
+    cerr << "open error: " << cws_fn << endl;
     return 1;
   }
 
@@ -51,7 +51,7 @@ int run(const cmdline::parser& p) {
     ofs << cws_dim << '\n';
   }
 
-  vector<float> dat_vec(dat_dim);
+  vector<float> base_vec(dat_dim);
 
   size_t counter = 0;
   size_t num_vecs = 0;
@@ -79,7 +79,7 @@ int run(const cmdline::parser& p) {
     for (size_t j = 0; j < dat_dim; ++j) {
       T c;
       ifs.read(reinterpret_cast<char*>(&c), sizeof(c));
-      dat_vec[j] = static_cast<float>(c);
+      base_vec[j] = static_cast<float>(c);
     }
     for (size_t i = 0; i < cws_dim; ++i) {
       size_t offset = i * dat_dim;
@@ -91,7 +91,7 @@ int run(const cmdline::parser& p) {
       size_t min_id = 0;
 
       for (size_t j = 0; j < dat_dim; ++j) {
-        float t = floor(log10(dat_vec[j]) / vec_R[j] + vec_B[j]);
+        float t = floor(log10(base_vec[j]) / vec_R[j] + vec_B[j]);
         float a = log10(vec_C[j]) - (vec_R[j] * (t + 1.0 - vec_B[j]));
 
         if (a < min_a) {
@@ -131,7 +131,7 @@ int main(int argc, char** argv) {
   std::ios::sync_with_stdio(false);
 
   cmdline::parser p;
-  p.add<string>("dat_fn", 'i', "input file name of data vectors of BIGANN format", true);
+  p.add<string>("base_fn", 'b', "input file name of base vectors on TEXMEX format (fvecs/bvecs)", true);
   p.add<string>("rand_fn", 'r', "input file name of random matrix data", true);
   p.add<string>("cws_fn", 'o', "output file name of cws sketches", true);
   p.add<size_t>("dat_dim", 'd', "dimension of the input data", true);
@@ -140,8 +140,8 @@ int main(int argc, char** argv) {
   p.add<bool>("as_text", 't', "as text?", false);
   p.parse_check(argc, argv);
 
-  auto dat_fn = p.get<string>("dat_fn");
-  auto ext = get_ext(dat_fn);
+  auto base_fn = p.get<string>("base_fn");
+  auto ext = get_ext(base_fn);
 
   if (ext == "fvecs") {
     return run<float>(p);

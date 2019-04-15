@@ -5,7 +5,7 @@
 #include "misc.hpp"
 
 template <typename Distribution>
-void gen_random_matrix(Distribution&& dist, ofstream& ofs, size_t size) {
+void generate_random_matrix(Distribution&& dist, ofstream& ofs, size_t size) {
   random_device seed_gen;
   mt19937_64 engine(seed_gen());
   for (size_t i = 0; i < size; ++i) {
@@ -54,11 +54,11 @@ int main(int argc, char** argv) {
   size_t size = dat_dim * cws_dim;
 
   cout << "Generating random data with gamma_distribution..." << endl;
-  gen_random_matrix(gamma_t(2.0, 1.0), ofs, size);
+  generate_random_matrix(gamma_t(2.0, 1.0), ofs, size);
   cout << "Generating random data with gamma_distribution..." << endl;
-  gen_random_matrix(gamma_t(2.0, 1.0), ofs, size);
+  generate_random_matrix(gamma_t(2.0, 1.0), ofs, size);
   cout << "Generating random data with uniform_real_distribution..." << endl;
-  gen_random_matrix(uniform_t(2.0, 1.0), ofs, size);
+  generate_random_matrix(uniform_t(2.0, 1.0), ofs, size);
 
   cout << "Output " << rand_fn << endl;
 
