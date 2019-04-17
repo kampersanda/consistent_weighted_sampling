@@ -57,7 +57,7 @@ int main(int argc, char** argv) {
 
   {
     ostringstream oss;
-    oss << score_fn << "_" << bits << "x" << dim << ".txt";
+    oss << score_fn << "." << bits << "x" << dim << ".txt";
     score_fn = oss.str();
   }
 

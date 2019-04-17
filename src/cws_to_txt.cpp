@@ -8,7 +8,7 @@ int main(int argc, char** argv) {
 
   cmdline::parser p;
   p.add<string>("cws_fn", 'i', "input file name of cws sketches (in bvecs format)", true);
-  p.add<size_t>("num", 'n', "number of sketches printed", false, 20);
+  p.add<size_t>("num", 'n', "number of sketches printed", false, 5);
   p.parse_check(argc, argv);
 
   auto cws_fn = p.get<string>("cws_fn");
