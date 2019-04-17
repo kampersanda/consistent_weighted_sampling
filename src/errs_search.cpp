@@ -3,11 +3,14 @@
 
 using namespace texmex_format;
 
-uint32_t get_hamdist(const uint8_t* v1, const uint8_t* v2, uint32_t dim) {
+uint32_t get_hamdist(const uint8_t* v1, const uint8_t* v2, uint32_t dim, uint32_t max_errs) {
   uint32_t errs = 0;
   for (uint32_t i = 0; i < dim; ++i) {
     if (v1[i] != v2[i]) {
       ++errs;
+      if (max_errs < errs) {
+        break;
+      }
     }
   }
   return errs;
@@ -22,7 +25,7 @@ int main(int argc, char** argv) {
   p.add<string>("score_fn", 'o', "output file name of ranked score data", true);
   p.add<uint32_t>("bits", 'b', "number of bits evaluated (<= 8)", false, 8);
   p.add<uint32_t>("dim", 'd', "dimension of CWS-sketches evaluated", false, 64);
-  p.add<uint32_t>("topk", 'k', "k-nearest neighbors", false, 100);
+  p.add<uint32_t>("max_errs", 'e', "e-neighbor search", false, 10);
   p.parse_check(argc, argv);
 
   auto base_fn = p.get<string>("base_fn");
@@ -30,7 +33,7 @@ int main(int argc, char** argv) {
   auto score_fn = p.get<string>("score_fn");
   auto bits = p.get<uint32_t>("bits");
   auto dim = p.get<uint32_t>("dim");
-  auto topk = p.get<uint32_t>("topk");
+  auto max_errs = p.get<uint32_t>("max_errs");
 
   if (bits == 0 or bits > 8) {
     cerr << "error: invalid bits" << endl;
@@ -53,11 +56,11 @@ int main(int argc, char** argv) {
     uint32_t id;
     uint32_t errs;
   };
-  vector<id_errs_t> ranked_scores(N);
+  vector<id_errs_t> ranked_scores;
 
   {
     ostringstream oss;
-    oss << score_fn << ".topk." << bits << "x" << dim << ".txt";
+    oss << score_fn << ".errs." << bits << "x" << dim << ".txt";
     score_fn = oss.str();
   }
 
@@ -66,15 +69,16 @@ int main(int argc, char** argv) {
     cerr << "open error: " << score_fn << endl;
     return 1;
   }
-  ofs << M << '\n' << topk << '\n';
+  ofs << M << '\n' << max_errs << '\n';
 
   for (size_t j = 0; j < M; ++j) {
     const uint8_t* query = &query_codes[j * dim];
     for (size_t i = 0; i < N; ++i) {
       const uint8_t* base = &base_codes[i * dim];
-      uint32_t errs = get_hamdist(base, query, dim);
-      ranked_scores[i].id = uint32_t(i);
-      ranked_scores[i].errs = errs;
+      uint32_t errs = get_hamdist(base, query, dim, max_errs);
+      if (errs <= max_errs) {
+        ranked_scores.push_back(id_errs_t{uint32_t(i), errs});
+      }
     }
 
     std::sort(ranked_scores.begin(), ranked_scores.end(), [](const id_errs_t& a, const id_errs_t& b) {
@@ -84,7 +88,7 @@ int main(int argc, char** argv) {
       return a.id < b.id;
     });
 
-    for (uint32_t i = 0; i < topk; ++i) {
+    for (size_t i = 0; i < ranked_scores.size(); ++i) {
       ofs << ranked_scores[i].id << ':' << ranked_scores[i].errs << ',';
     }
     ofs << '\n';

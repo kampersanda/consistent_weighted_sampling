@@ -39,5 +39,5 @@ echo "(6) Do topk search for the CWS-sketches"
 echo ""
 
 echo "(7) Evaluate the recall"
-python scripts/evaluate.py news20/news20.scale_score.8x64.txt news20/news20.scale_groundtruth.txt
+python scripts/evaluate.py news20/news20.scale_score.topk.8x64.txt news20/news20.scale_groundtruth.txt
 echo ""

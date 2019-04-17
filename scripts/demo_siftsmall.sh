@@ -35,5 +35,5 @@ echo "(6) Do topk search for the CWS-sketches"
 echo ""
 
 echo "(7) Evaluate the recall"
-python scripts/evaluate.py siftsmall/siftsmall_score.8x64.txt siftsmall/siftsmall_groundtruth.txt
+python scripts/evaluate.py siftsmall/siftsmall_score.topk.8x64.txt siftsmall/siftsmall_groundtruth.txt
 echo ""
