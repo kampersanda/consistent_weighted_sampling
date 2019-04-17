@@ -42,3 +42,4 @@ _old/
 .vscode/
 sample-build/
 sample-large-build/
+data/

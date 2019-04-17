@@ -16,9 +16,13 @@ message(STATUS "CXX_FLAGS are ${CMAKE_CXX_FLAGS}")
 message(STATUS "CXX_FLAGS_DEBUG are ${CMAKE_CXX_FLAGS_DEBUG}")
 message(STATUS "CXX_FLAGS_RELEASE are ${CMAKE_CXX_FLAGS_RELEASE}")
 
-add_executable(generate_random_matrix generate_random_matrix.cpp)
-add_executable(cws_TEXMEX cws_TEXMEX.cpp)
-add_executable(cws_ASCII cws_ASCII.cpp)
-add_executable(to_txt to_txt.cpp)
-add_executable(sample sample.cpp)
+add_executable(generate_random_data generate_random_data.cpp)
+add_executable(cws_in_ascii cws_in_ascii.cpp)
+add_executable(cws_in_texmex cws_in_texmex.cpp)
+add_executable(make_groundtruth_in_ascii make_groundtruth_in_ascii.cpp)
+add_executable(make_groundtruth_in_texmex make_groundtruth_in_texmex.cpp)
+add_executable(topk_search topk_search.cpp)
+add_executable(cws_to_txt cws_to_txt.cpp)
+
+file(COPY ${CMAKE_SOURCE_DIR}/scripts DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 

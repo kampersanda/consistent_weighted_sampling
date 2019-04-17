@@ -9,17 +9,17 @@ void generate_random_matrix(Distribution&& dist, ofstream& ofs, size_t size) {
   random_device seed_gen;
   mt19937_64 engine(seed_gen());
   for (size_t i = 0; i < size; ++i) {
-    write_value(static_cast<float>(dist(engine)), ofs);
+    write_value(ofs, static_cast<float>(dist(engine)));
   }
 }
 
 int main(int argc, char** argv) {
-  std::ios::sync_with_stdio(false);
+  ios::sync_with_stdio(false);
 
   cmdline::parser p;
   p.add<string>("rand_fn", 'r', "output file name of random matrix data", true);
   p.add<size_t>("dat_dim", 'd', "dimension of the input data", true);
-  p.add<size_t>("cws_dim", 'D', "dimension of the cws sketches", false, 64);
+  p.add<size_t>("cws_dim", 'D', "dimension of the CWS-sketches will be generated", false, 64);
   p.add<bool>("generalized", 'g', "generalized?", false, false);
   p.parse_check(argc, argv);
 
@@ -44,7 +44,7 @@ int main(int argc, char** argv) {
 
   ofstream ofs(rand_fn);
   if (!ofs) {
-    cerr << "Open error: " << rand_fn << endl;
+    cerr << "open error: " << rand_fn << endl;
     exit(1);
   }
 
