@@ -10,6 +10,7 @@ int run(const cmdline::parser& p) {
   auto groundtruth_fn = p.get<string>("groundtruth_fn");
   auto begin_id = p.get<uint32_t>("begin_id");
   auto topk = p.get<uint32_t>("topk");
+  auto progress = p.get<size_t>("progress");
 
   const auto base_vecs = load_vecs<Flags>(base_fn, begin_id);
   size_t N = base_vecs.size();
@@ -31,7 +32,18 @@ int run(const cmdline::parser& p) {
   }
   ofs << M << '\n' << topk << '\n';
 
+  auto start_tp = chrono::system_clock::now();
+  size_t progress_point = progress;
+
   for (size_t j = 0; j < M; ++j) {
+    if (j == progress_point) {
+      progress_point += progress;
+      auto cur_tp = chrono::system_clock::now();
+      auto dur_cnt = chrono::duration_cast<chrono::seconds>(cur_tp - start_tp).count();
+      cout << j << " queries processed in ";
+      cout << dur_cnt / 3600 << "h" << dur_cnt / 60 % 60 << "m" << dur_cnt % 60 << "s..." << endl;
+    }
+
     const auto& query = query_vecs[j];
     for (size_t i = 0; i < N; ++i) {
       const auto& base = base_vecs[i];
@@ -51,6 +63,11 @@ int run(const cmdline::parser& p) {
     }
     ofs << '\n';
   }
+
+  auto cur_tp = chrono::system_clock::now();
+  auto dur_cnt = chrono::duration_cast<chrono::seconds>(cur_tp - start_tp).count();
+  cout << "Completed!! --> " << M << " queries processed in ";
+  cout << dur_cnt / 3600 << "h" << dur_cnt / 60 % 60 << "m" << dur_cnt % 60 << "s!!" << endl;
 
   cout << "Output " << groundtruth_fn << endl;
 
@@ -82,6 +99,7 @@ int main(int argc, char** argv) {
   p.add<bool>("generalized", 'g', "Does the input data need to be generalized?", false, false);
   p.add<bool>("labeled", 'l', "Does each input vector have a label at the head?", false, false);
   p.add<uint32_t>("topk", 'k', "k-nearest neighbors", false, 100);
+  p.add<size_t>("progress", 'p', "step of printing progress", false, numeric_limits<size_t>::max());
   p.parse_check(argc, argv);
 
   auto weighted = p.get<bool>("weighted");
