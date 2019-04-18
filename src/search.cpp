@@ -22,7 +22,7 @@ int main(int argc, char** argv) {
   p.add<string>("score_fn", 'o', "output file name of ranked score data", true);
   p.add<uint32_t>("bits", 'b', "number of bits evaluated (<= 8)", false, 8);
   p.add<uint32_t>("dim", 'd', "dimension of CWS-sketches evaluated", false, 64);
-  p.add<uint32_t>("topk", 'k', "k-nearest neighbors", false, 100);
+  p.add<uint32_t>("topk", 'k', "k-nearest neighbors are found", false, 100);
   p.parse_check(argc, argv);
 
   auto base_fn = p.get<string>("base_fn");
