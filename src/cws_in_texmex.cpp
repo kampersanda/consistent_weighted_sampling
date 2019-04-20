@@ -97,6 +97,7 @@ int main(int argc, char** argv) {
   p.add<string>("base_fn", 'i', "input file name of database vectors (in fvecs/bvecs format)", true);
   p.add<string>("rand_fn", 'r', "input file name of random matrix data", true);
   p.add<string>("cws_fn", 'o', "output file name of CWS-sketches (in bvecs format)", true);
+  p.add<string>("format", 'f', "format of input file (fvecs/bvecs); if empty, use ext of base_fn", false, "");
   p.add<size_t>("dat_dim", 'd', "dimension of the input data", true);
   p.add<size_t>("cws_dim", 'D', "dimension of the output CWS-sketches", false, 64);
   p.add<bool>("generalized", 'g', "Does the input data need to be generalized?", false, false);
@@ -104,17 +105,21 @@ int main(int argc, char** argv) {
   p.parse_check(argc, argv);
 
   auto base_fn = p.get<string>("base_fn");
+  auto format = p.get<string>("format");
   auto generalized = p.get<bool>("generalized");
-  auto ext = get_ext(base_fn);
 
-  if (ext == "fvecs") {
+  if (format.empty()) {
+    format = get_ext(base_fn);
+  }
+
+  if (format == "fvecs") {
     if (generalized) {
       return run<float, true>(p);
     } else {
       return run<float, false>(p);
     }
   }
-  if (ext == "bvecs") {
+  if (format == "bvecs") {
     return run<uint8_t, false>(p);
   }
 
