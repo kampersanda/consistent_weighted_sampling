@@ -6,7 +6,7 @@
 
 using namespace texmex_format;
 
-template <typename InType>
+template <typename InType, bool Generalized>
 int run(const cmdline::parser& p) {
   auto base_fn = p.get<string>("base_fn");
   auto rand_fn = p.get<string>("rand_fn");
@@ -30,7 +30,10 @@ int run(const cmdline::parser& p) {
     return 1;
   }
 
-  data_loader<InType, float> base_loader(base_fn, dat_dim);
+  if constexpr (Generalized) {
+    dat_dim *= 2;
+  }
+  data_loader<InType, float, Generalized> base_loader(base_fn, dat_dim);
 
   size_t counter = 0;
   size_t num_vecs = 0;
@@ -96,17 +99,23 @@ int main(int argc, char** argv) {
   p.add<string>("cws_fn", 'o', "output file name of CWS-sketches (in bvecs format)", true);
   p.add<size_t>("dat_dim", 'd', "dimension of the input data", true);
   p.add<size_t>("cws_dim", 'D', "dimension of the output CWS-sketches", false, 64);
+  p.add<bool>("generalized", 'g', "Does the input data need to be generalized?", false, false);
   p.add<size_t>("progress", 'p', "step of printing progress", false, numeric_limits<size_t>::max());
   p.parse_check(argc, argv);
 
   auto base_fn = p.get<string>("base_fn");
+  auto generalized = p.get<bool>("generalized");
   auto ext = get_ext(base_fn);
 
   if (ext == "fvecs") {
-    return run<float>(p);
+    if (generalized) {
+      return run<float, true>(p);
+    } else {
+      return run<float, false>(p);
+    }
   }
   if (ext == "bvecs") {
-    return run<uint8_t>(p);
+    return run<uint8_t, false>(p);
   }
 
   cerr << "error: invalid extension" << endl;

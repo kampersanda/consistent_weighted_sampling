@@ -64,12 +64,16 @@ inline string get_ext(const string& fn) {
 
 namespace texmex_format {
 
-template <class InType, class OutType = float>
+template <class InType, class OutType = float, bool Generalized = false>
 class data_loader {
  public:
   data_loader() = default;
 
+  // if Generalized = trie, dim needs to be set twice
   data_loader(const string& fn, uint32_t dim) : ifs_(fn), vec_(dim) {
+    if constexpr (Generalized) {
+      static_assert(std::is_same_v<OutType, float>);
+    }
     if (!ifs_) {
       cerr << "open error: " << fn << '\n';
       exit(1);
@@ -81,12 +85,30 @@ class data_loader {
     if (ifs_.eof()) {
       return nullptr;
     }
-    if (vec_.size() < dim) {
-      vec_.resize(dim);
+
+    if constexpr (Generalized) {
+      if (vec_.size() < dim * 2) {
+        vec_.resize(dim * 2);
+      }
+      for (uint32_t j = 0; j < dim; ++j) {
+        auto v = static_cast<OutType>(read_value<InType>(ifs_));
+        if (v >= 0.0) {
+          vec_[j * 2] = v;
+          vec_[j * 2 + 1] = 0.0;
+        } else {
+          vec_[j * 2] = 0.0;
+          vec_[j * 2 + 1] = -v;
+        }
+      }
+    } else {
+      if (vec_.size() < dim) {
+        vec_.resize(dim);
+      }
+      for (uint32_t j = 0; j < dim; ++j) {
+        vec_[j] = static_cast<OutType>(read_value<InType>(ifs_));
+      }
     }
-    for (uint32_t j = 0; j < dim; ++j) {
-      vec_[j] = static_cast<OutType>(read_value<InType>(ifs_));
-    }
+
     return vec_.data();
   }
 
@@ -95,10 +117,10 @@ class data_loader {
   vector<OutType> vec_;
 };
 
-template <class InType, class OutType = float>
+template <class InType, class OutType = float, bool Generalized = false>
 inline vector<OutType> load_vecs(const string& fn, uint32_t dim) {
   vector<OutType> vecs;
-  data_loader<InType, OutType> loader(fn, dim);
+  data_loader<InType, OutType, Generalized> loader(fn, dim);
 
   while (true) {
     auto vec = loader.next();
