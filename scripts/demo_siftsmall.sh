@@ -29,7 +29,7 @@ echo "The generated CWS-sketches are as follows..."
 echo ""
 
 echo "(5) Make groundtruth data in minmax similarity for topk search"
-./bin/make_groundtruth_in_texmex -i siftsmall/siftsmall_base.fvecs -q siftsmall/siftsmall_query.fvecs -o siftsmall/siftsmall_groundtruth -d 128 -p 20
+./bin/make_groundtruth_in_texmex -i siftsmall/siftsmall_base.fvecs -q siftsmall/siftsmall_query.fvecs -o siftsmall/siftsmall_groundtruth -d 128
 echo ""
 
 echo "(6) Do topk search for the CWS-sketches"
@@ -37,5 +37,5 @@ echo "(6) Do topk search for the CWS-sketches"
 echo ""
 
 echo "(7) Evaluate the recall"
-python scripts/evaluate.py siftsmall/siftsmall_score.topk.8x64.txt siftsmall/siftsmall_groundtruth.txt
+./scripts/evaluate.py siftsmall/siftsmall_score.topk.8x64.txt siftsmall/siftsmall_groundtruth.txt
 echo ""

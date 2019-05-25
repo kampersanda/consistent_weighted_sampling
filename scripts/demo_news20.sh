@@ -33,7 +33,7 @@ echo "The generated CWS-sketches are as follows..."
 echo ""
 
 echo "(5) Make groundtruth data in minmax similarity for topk search"
-./bin/make_groundtruth_in_ascii -i news20/news20.scale_base.txt -q news20/news20.scale_query.txt -o news20/news20.scale_groundtruth -b 1 -w 1 -g 0 -l 1 -p 20
+./bin/make_groundtruth_in_ascii -i news20/news20.scale_base.txt -q news20/news20.scale_query.txt -o news20/news20.scale_groundtruth -b 1 -w 1 -g 0 -l 1
 echo ""
 
 echo "(6) Do topk search for the CWS-sketches"
@@ -41,5 +41,5 @@ echo "(6) Do topk search for the CWS-sketches"
 echo ""
 
 echo "(7) Evaluate the recall"
-python scripts/evaluate.py news20/news20.scale_score.topk.8x64.txt news20/news20.scale_groundtruth.txt
+./scripts/evaluate.py news20/news20.scale_score.topk.8x64.txt news20/news20.scale_groundtruth.txt
 echo ""
