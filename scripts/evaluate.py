@@ -8,7 +8,7 @@ def read_data(path):
     lines = [line for line in open(path, 'rt')][2:]
     lines = [line.split(',')[:-1] for line in lines]
     lines = [[int(elem.split(':')[0]) for elem in line] for line in lines]
-    return np.array(lines)  # line[q][k] q-th query, top_k-th id
+    return np.array(lines)
 
 
 def eval_recall(score, groundtruth, R):

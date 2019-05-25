@@ -33,9 +33,8 @@
 
 # My Definition
 .DS_Store
-build/
-release-build/
 cmake-build-debug/
+build*
 .idea/
 .DS_Store
 _old/

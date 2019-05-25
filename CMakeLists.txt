@@ -25,5 +25,6 @@ foreach(SOURCE ${SOURCES})
   add_executable(${PREFIX} ${SOURCE})
 endforeach(SOURCE)
 
+message(STATUS "COPY ${CMAKE_SOURCE_DIR}/scripts to ${CMAKE_CURRENT_BINARY_DIR}")
 file(COPY ${CMAKE_SOURCE_DIR}/scripts DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
