@@ -1,6 +1,6 @@
 # consistent\_weighted\_sampling
 
-This software implements *consistent weight sampling (CWS)*, a similarity-preserving hashing technique for weighted Jaccard (or min-max) similarity, and approximate nearest neighber (ANN) search via CWS [1].
+This software implements *consistent weighted sampling (CWS)*, a similarity-preserving hashing technique for weighted Jaccard (or min-max) similarity, and approximate nearest neighber (ANN) search via CWS [1].
 The software applies a simplification of the original CWS method called *0-bit CWS* that generates non-negative integer vectors [2,3,4].
 
 ## Build instruction
