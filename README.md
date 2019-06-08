@@ -51,13 +51,13 @@ For example, binary vectors represented as follows can be also input.
 
 ### `texmex` format
 
-This format is `.bvecs` or `.fvecs` used in [BIGANN](http://corpus-texmex.irisa.fr) databases. In detail, see the project page of [BIGANN](http://corpus-texmex.irisa.fr).
+`.bvecs` and `.fvecs` formats used in [BIGANN](http://corpus-texmex.irisa.fr) are supported. In detail, see the project page of [BIGANN](http://corpus-texmex.irisa.fr).
 
 ## Running example for dataset news20
 
-I exprain the usage of the software via a running example.
+I explain the usage of the software via a running example.
 
-You are at directry `consistent_weighted_sampling/build` through the compiling process.
+You are at directory `consistent_weighted_sampling/build` through the compiling process.
 Then, you can try a small demo for dataset [news20](https://www.csie.ntu.edu.tw/~cjlin/libsvmtools/datasets/multiclass.html#news20) provided from LIBSVM.
 
 ```
@@ -68,13 +68,13 @@ The demo script runs as follows.
 
 ### (1) Download the dataset
 
-Directry `news20` is made to put the dataset files.
+Directory `news20` is made to put the dataset files.
 
 ```
 $ mkdir news20
 ```
 
-The dataset `news20.scale` is donwloaded to be used as a database.
+The dataset `news20.scale.bz2` is downloaded to be used as a database.
 
 ```
 $ wget https://www.csie.ntu.edu.tw/~cjlin/libsvmtools/datasets/multiclass/news20.scale.bz2
@@ -82,7 +82,7 @@ $ bzip2 -d news20.scale.bz2
 $ mv news20.scale news20/news20.scale_base.txt
 ```
 
-The dataset `news20.t.scale` is donwloaded and the top 100 feature vectors are used a query collection.
+The dataset `news20.t.scale.bz2` is downloaded and the top 100 feature vectors are used as a query collection.
 
 ```
 $ wget https://www.csie.ntu.edu.tw/~cjlin/libsvmtools/datasets/multiclass/news20.t.scale.bz2
@@ -91,7 +91,7 @@ $ head -100 news20.t.scale > news20/news20.scale_query.txt
 $ rm news20.t.scale
 ```
 
-As a result, there should be the database file `news20/news20.scale_base.txt` and query file `news20/news20.scale_query.txt`.
+As a result, there should be the database file `news20/news20.scale_base.txt` and query collection file `news20/news20.scale_query.txt`.
 
 ### (2) Generate random matrix data
 
@@ -104,8 +104,8 @@ $ ./bin/generate_random_data -r news20/news20.scale -d 62061 -D 64 -g 0
 Then, the options are
 
 - `-r` indicates the output file name.
-- `-d` indicates the dimension (i.e., # of features) of `news20`.
-- `-D` indicates the maximum dimension of CWS vectors.
+- `-d` indicates the dimension (i.e., # of features) of the input feature vectors (`news20` in this case).
+- `-D` indicates the maximum dimension of CWS vectors generated.
 - `-g` indicates whether or not generalization is needed, i.e., feature values include negative values.
 
 As a result, there should be the random matrix data file `news20/news20.scale.62061x64.rnd`.
@@ -123,8 +123,8 @@ Then, the options are
 - `-i` indicates the input file name of feature vectors.
 - `-r` indicates the input file name of the random matrix data.
 - `-o` indicates the output file name of CWS vectors in `.bvecs` format.
-- `-d` indicates the dimension (i.e., # of features) of `news20`.
-- `-D` indicates the dimension of generated CWS vectors. This value must be no more than the maximum dimension set in process (2).
+- `-d` indicates the dimension (i.e., # of features) of the input feature vectors (`news20` in this case).
+- `-D` indicates the dimension of CWS vectors generated. This value must be no more than the maximum dimension set in process (2).
 - `-b` indicates at which `<index>` starts.
 - `-w` indicates whether or not there is `<value>` column in the input file.
 - `-l` indicates whether or not there is `<label>` column in the input file.
@@ -136,7 +136,7 @@ As a result, there should be the CWS data file `news20/news20.scale_base.cws.bve
 
 As generated CWS vectors are in `.bvecs` format, each value of them is represented in 8 bits, i.e., in the range between 0 and 255.
 In other words, parameter *b* in [2,3,4] is 8.
-If you want to use *b* smaller than 8, please the lowest *b* bits of each value.
+If you want to use *b* smaller than 8, please take the lowest *b* bits of each value.
 
 ### (4) Generate CWS vectors from the query collection
 
@@ -162,7 +162,7 @@ As a result, there should be the groundtruth file `news20/news20.scale_groundtru
 
 ### (6) Perform kANN search
 
-Search the kNN vectors from the database `news20.scale_base.cws.bvecs` for each query vector in `news20.scale_query.cws.bvecs`.
+Search kNN vectors from the database `news20.scale_base.cws.bvecs` for each query vector in `news20.scale_query.cws.bvecs`.
 
 ```
 ./bin/search -i news20/news20.scale_base.cws.bvecs -q news20/news20.scale_query.cws.bvecs -o news20/news20.scale_score -b 8 -d 64 -k 100
@@ -175,9 +175,11 @@ Then, the options are
 - `-d` indicates the dimension of CWS vectors to be used.
 - `-k` indicates the top-k value to be searched.
 
+As a result, there should be the result file `news20/news20.scale_score.topk.8x64.txt`.
+
 ### (7) Evaluate the recall
 
-Evaluate the recall for the search results.
+Evaluate the recalls for the search results.
 
 ```
 ./scripts/evaluate.py news20/news20.scale_score.topk.8x64.txt news20/news20.scale_groundtruth.txt
