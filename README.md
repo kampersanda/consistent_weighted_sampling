@@ -41,7 +41,7 @@ Based on the LIBSVM format, four format patterns are supported:
 - without `<label>` but with `<value>`
 - without `<label>` and `<value>`
 
-For example, binary vectors represented as follows can be also input.
+For example, binary vectors represented as follows (i.e. without `<label>` and `<value>`) can be also input.
 
 ```
 197 321 399 561 575 587 917 1563 1628
@@ -173,7 +173,7 @@ Then, the options are
 - `-o` indicates the output file name of the search results.
 - `-b` indicates the lowest *b* bits to be used.
 - `-d` indicates the dimension of CWS vectors to be used.
-- `-k` indicates the top-k value to be searched.
+- `-k` indicates the top-k parameter to be searched.
 
 As a result, there should be the result file `news20/news20.scale_score.topk.8x64.txt`.
 
