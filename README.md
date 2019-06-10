@@ -26,22 +26,33 @@ The software supports two input formats `ascii` and `texmex`.
 This format is based on [LIBSVM format](https://www.csie.ntu.edu.tw/~r94100/libsvm-2.8/README) whose each feature vector is written in ASCII, as follows.
 
 ```
-<label> <index1>:<value1> <index2>:<value2> ...
-<label> <index1>:<value1> <index2>:<value2> ...
+<label> <index1>:<value1> <index2>:<value2> <index3>:<value3> ...
+<label> <index1>:<value1> <index2>:<value2> <index3>:<value3> ...
 .
 .
 .
-<label> <index1>:<value1> <index2>:<value2> ...
+<label> <index1>:<value1> <index2>:<value2> <index3>:<value3> ...
 ```
 
-Based on the LIBSVM format, four format patterns are supported:
+Based on the LIBSVM format, the four format patterns are supported:
 
 - with `<label>` and `<value>` (as above)
 - with `<label>` but without `<value>`
 - without `<label>` but with `<value>`
 - without `<label>` and `<value>`
 
-For example, binary vectors represented as follows (i.e. without `<label>` and `<value>`) can be also input.
+For example, the format without `<label>` and `<value>` is as follows.
+
+```
+<index1> <index2> <index3> ...
+<index1> <index2> <index3> ...
+.
+.
+.
+<index1> <index2> <index3> ...
+```
+
+In other words, binary vectors represented as follows can be also input.
 
 ```
 197 321 399 561 575 587 917 1563 1628
@@ -202,5 +213,5 @@ Recall@100:	0.900
 1. Mark Manasse, Frank McSherry and Kunal Talwar: **Consistent weighted sampling**, *Microsoft Research Technical Report*, 2010.
 2. Ping Li: **0-bit consistent weighted sampling**, *KDD*, 2015.
 3. Ping Li: **Linearized GMM kernels and normalized random fourier features**, *KDD*, 2017.
-4. Ping Li and Cun-Hui Zhang: **Theory of the GMM Kernel**, *WWW*, 2017.
+4. Ping Li and Cun-Hui Zhang: **Theory of the GMM kernel**, *WWW*, 2017.
 
