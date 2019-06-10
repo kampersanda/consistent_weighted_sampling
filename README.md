@@ -60,6 +60,8 @@ In other words, binary vectors represented as follows can be also input.
 77 137 248 271 357 377 400 412 678
 ```
 
+By the way, 0-bit CWS for binary vectors is so-called b-bit minwise hashing for Jaccard similarity [5].
+
 ### `texmex` format
 
 `.bvecs` and `.fvecs` formats used in [BIGANN](http://corpus-texmex.irisa.fr) are supported. In detail, see the project page of [BIGANN](http://corpus-texmex.irisa.fr).
@@ -214,4 +216,5 @@ Recall@100:	0.900
 2. Ping Li: **0-bit consistent weighted sampling**, *KDD*, 2015.
 3. Ping Li: **Linearized GMM kernels and normalized random fourier features**, *KDD*, 2017.
 4. Ping Li and Cun-Hui Zhang: **Theory of the GMM kernel**, *WWW*, 2017.
+5. Ping Li and Christian König: **b-Bit minwise hashing**, *WWW*, 2010.
 
