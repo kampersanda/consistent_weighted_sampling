@@ -106,35 +106,17 @@ $ rm news20.t.scale
 
 As a result, there should be the database file `news20/news20.scale_base.txt` and query collection file `news20/news20.scale_query.txt`.
 
-### (2) Generate random matrix data
-
-Random matrix data are generated for use in CWS.
-
-```
-$ ./bin/generate_random_data -r news20/news20.scale -d 62061 -D 64 -g 0
-```
-
-Then, the options are
-
-- `-r` indicates the output file name.
-- `-d` indicates the dimension (i.e., # of features) of the input feature vectors (`news20` in this case).
-- `-D` indicates the maximum dimension of CWS vectors generated.
-- `-g` indicates whether or not generalization is needed, i.e., feature values include negative values.
-
-As a result, there should be the random matrix data file `news20/news20.scale.62061x64.rnd`.
-
-### (3) Generate CWS vectors from the database
+### (2) Generate CWS vectors from the database
 
 CWS vectors are generated from `news20.scale_base.txt`.
 
 ```
-$ ./bin/cws_in_ascii -i news20/news20.scale_base.txt -r news20/news20.scale.62061x64.rnd -o news20/news20.scale_base.cws -d 62061 -D 64 -b 1 -w 1 -l 1 -g 0
+$ ./bin/cws_in_ascii -i news20/news20.scale_base.txt -o news20/news20.scale_base.cws -d 62061 -D 64 -b 1 -w 1 -l 1 -g 0
 ```
 
 Then, the options are
 
 - `-i` indicates the input file name of feature vectors.
-- `-r` indicates the input file name of the random matrix data.
 - `-o` indicates the output file name of CWS vectors in `.bvecs` format.
 - `-d` indicates the dimension (i.e., # of features) of the input feature vectors (`news20` in this case).
 - `-D` indicates the dimension of CWS vectors generated. This value must be no more than the maximum dimension set in process (2).
@@ -142,6 +124,7 @@ Then, the options are
 - `-w` indicates whether or not there is `<value>` column in the input file.
 - `-l` indicates whether or not there is `<label>` column in the input file.
 - `-g` indicates whether or not generalization is needed, i.e., feature values include negative values.
+- `-s` indicates the seed for generating random matrices
 
 As a result, there should be the CWS data file `news20/news20.scale_base.cws.bvecs`.
 
@@ -151,17 +134,17 @@ As generated CWS vectors are in `.bvecs` format, each value of them is represent
 In other words, parameter *b* in [2,3,4] is 8.
 If you want to use *b* smaller than 8, please take the lowest *b* bits of each value.
 
-### (4) Generate CWS vectors from the query collection
+### (3) Generate CWS vectors from the query collection
 
 CWS vectors are generated from `news20.scale_query.txt` in the same manner.
 
 ```
-$ ./bin/cws_in_ascii -i news20/news20.scale_query.txt -r news20/news20.scale.62061x64.rnd -o news20/news20.scale_query.cws -d 62061 -D 64 -b 1 -w 1 -l 1 -g 0
+$ ./bin/cws_in_ascii -i news20/news20.scale_query.txt -o news20/news20.scale_query.cws -d 62061 -D 64 -b 1 -w 1 -l 1 -g 0
 ```
 
 As a result, there should be the CWS data file `news20/news20.scale_query.cws.bvecs`.
 
-### (5) Make groundtruth data in (weighted) Jaccard similarity
+### (4) Make groundtruth data in (weighted) Jaccard similarity
 
 To evaluate kANN search in process (7), make groundtruth data in (weighted) Jaccard similarity from `news20.scale_base.txt` and `news20.scale_query.txt`.
 
@@ -173,7 +156,7 @@ Option `-o` indicates the output file name of the groundtruth.
 
 As a result, there should be the groundtruth file `news20/news20.scale_groundtruth.txt`.
 
-### (6) Perform kANN search
+### (5) Perform kANN search
 
 Search kNN vectors from the database `news20.scale_base.cws.bvecs` for each query vector in `news20.scale_query.cws.bvecs`.
 
@@ -190,7 +173,7 @@ Then, the options are
 
 As a result, there should be the result file `news20/news20.scale_score.topk.8x64.txt`.
 
-### (7) Evaluate the recall
+### (6) Evaluate the recall
 
 Evaluate the recalls for the search results.
 
