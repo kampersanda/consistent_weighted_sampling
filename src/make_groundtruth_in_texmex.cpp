@@ -45,6 +45,8 @@ int run(const cmdline::parser& p) {
         }
 
         const float* query = &query_vecs[j * dim];
+
+#pragma omp parallel for
         for (size_t i = 0; i < N; ++i) {
             const float* base = &base_vecs[i * dim];
             id_sims[i].id = uint32_t(i);
@@ -76,6 +78,7 @@ int run(const cmdline::parser& p) {
 
 int main(int argc, char** argv) {
     ios::sync_with_stdio(false);
+    cout << "num threads: " << omp_get_max_threads() << endl;
 
     cmdline::parser p;
     p.add<string>("base_fn", 'i', "input file name of database vectors (in fvecs/bvecs format)", true);
@@ -83,7 +86,7 @@ int main(int argc, char** argv) {
     p.add<string>("groundtruth_fn", 'o', "output file name of the groundtruth", true);
     p.add<uint32_t>("dim", 'd', "dimension of the input data", true);
     p.add<uint32_t>("topk", 'k', "k-nearest neighbors", false, 100);
-    p.add<size_t>("progress", 'p', "step of printing progress", false, numeric_limits<size_t>::max());
+    p.add<size_t>("progress", 'p', "step of printing progress", false, 100);
     p.parse_check(argc, argv);
 
     auto base_fn = p.get<string>("base_fn");

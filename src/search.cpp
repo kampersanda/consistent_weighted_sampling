@@ -15,6 +15,7 @@ uint32_t get_hamdist(const uint8_t* v1, const uint8_t* v2, uint32_t dim) {
 
 int main(int argc, char** argv) {
     ios::sync_with_stdio(false);
+    cout << "num threads: " << omp_get_max_threads() << endl;
 
     cmdline::parser p;
     p.add<string>("base_fn", 'i', "input file name of database of CWS-sketches (in bvecs format)", true);
@@ -70,6 +71,8 @@ int main(int argc, char** argv) {
 
     for (size_t j = 0; j < M; ++j) {
         const uint8_t* query = &query_codes[j * dim];
+
+#pragma omp parallel for
         for (size_t i = 0; i < N; ++i) {
             const uint8_t* base = &base_codes[i * dim];
             uint32_t errs = get_hamdist(base, query, dim);

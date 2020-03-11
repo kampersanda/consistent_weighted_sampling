@@ -1,9 +1,11 @@
 #pragma once
 
+#include <omp.h>
 #include <chrono>
 #include <cmath>
 #include <fstream>
 #include <iostream>
+#include <random>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -15,6 +17,11 @@ inline void write_value(ostream& os, T val) {
     os.write(reinterpret_cast<const char*>(&val), sizeof(val));
 }
 template <typename T>
+inline void write_vec(ostream& os, const T* vec, size_t size) {
+    os.write(reinterpret_cast<const char*>(vec), size * sizeof(T));
+}
+
+template <typename T>
 inline T read_value(istream& is) {
     T val;
     is.read(reinterpret_cast<char*>(&val), sizeof(val));
@@ -25,37 +32,32 @@ inline void read_vec(istream& is, T* vec, size_t size) {
     is.read(reinterpret_cast<char*>(vec), size * sizeof(T));
 }
 
-struct rand_matrcies {
-    vector<float> R;
-    vector<float> C;
-    vector<float> B;
-};
-
-inline vector<float> load_rand_matrix(istream& is, size_t size) {
-    vector<float> ret(size);
-    for (size_t i = 0; i < size; ++i) {
-        ret[i] = read_value<float>(is);
-    }
-    if (is.eof()) {
-        cerr << "error: ifs for random data reaches EOF" << endl;
+inline ifstream make_ifstream(const string& filepath) {
+    ifstream ifs(filepath);
+    if (!ifs) {
+        cerr << "open error: " << filepath << endl;
         exit(1);
     }
-    return ret;
+    return ifs;
+}
+inline ofstream make_ofstream(const string& filepath) {
+    ofstream ofs(filepath);
+    if (!ofs) {
+        cerr << "open error: " << filepath << endl;
+        exit(1);
+    }
+    return ofs;
 }
 
-inline rand_matrcies load_rand_matrcies(const string& fn, size_t dat_dim, size_t cws_dim) {
-    ifstream ifs(fn);
-    if (!ifs) {
-        cerr << "open error: " << fn << endl;
-        exit(1);
-    }
+using gamma_t = gamma_distribution<float>;
+using uniform_t = uniform_real_distribution<float>;
 
-    rand_matrcies ret;
-    size_t size = dat_dim * cws_dim;
-    ret.R = load_rand_matrix(ifs, size);
-    ret.C = load_rand_matrix(ifs, size);
-    ret.B = load_rand_matrix(ifs, size);
-    return ret;
+template <typename Dist>
+void generate_random_matrix(Dist&& dist, vector<float>& out, size_t seed) {
+    mt19937_64 engine(seed);
+    for (size_t i = 0; i < out.size(); ++i) {
+        out[i] = static_cast<float>(dist(engine));
+    }
 }
 
 inline string get_ext(const string& fn) {
@@ -72,7 +74,7 @@ class data_loader {
     // if Generalized = trie, dim needs to be set twice
     data_loader(const string& fn, uint32_t dim) : ifs_(fn), vec_(dim) {
         if constexpr (Generalized) {
-            static_assert(std::is_same_v<OutType, float>);
+            static_assert(is_same_v<OutType, float>);
         }
         if (!ifs_) {
             cerr << "open error: " << fn << '\n';
@@ -127,7 +129,7 @@ inline vector<OutType> load_vecs(const string& fn, uint32_t dim) {
         if (vec == nullptr) {
             break;
         }
-        std::copy(vec, vec + dim, std::back_inserter(vecs));
+        copy(vec, vec + dim, back_inserter(vecs));
     }
     return vecs;
 }
@@ -223,7 +225,6 @@ using elem_type = elem_t<is_weighted<Flags>()>;
 
 template <int Flags>
 class data_loader {
-  public:
   public:
     data_loader() = default;
 

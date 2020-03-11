@@ -41,10 +41,12 @@ int run(const cmdline::parser& p) {
             auto cur_tp = chrono::system_clock::now();
             auto dur_cnt = chrono::duration_cast<chrono::seconds>(cur_tp - start_tp).count();
             cout << j << " queries processed in ";
-            cout << dur_cnt / 3600 << "h" << dur_cnt / 60 % 60 << "m" << dur_cnt % 60 << "s..." << endl;
+            cout << dur_cnt / 3600 << "h" << dur_cnt / 60 % 60 << "m" << dur_cnt % 60 << "s" << endl;
         }
 
         const auto& query = query_vecs[j];
+
+#pragma omp parallel for
         for (size_t i = 0; i < N; ++i) {
             const auto& base = base_vecs[i];
             id_sims[i].id = uint32_t(i);
@@ -89,6 +91,7 @@ int run_with_flags(int flags, const cmdline::parser& p) {
 
 int main(int argc, char** argv) {
     ios::sync_with_stdio(false);
+    cout << "num threads: " << omp_get_max_threads() << endl;
 
     cmdline::parser p;
     p.add<string>("base_fn", 'i', "input file name of database vectors (in ASCII format)", true);
@@ -99,7 +102,7 @@ int main(int argc, char** argv) {
     p.add<bool>("generalized", 'g', "Does the input data need to be generalized?", false, false);
     p.add<bool>("labeled", 'l', "Does each input vector have a label at the head?", false, false);
     p.add<uint32_t>("topk", 'k', "k-nearest neighbors", false, 100);
-    p.add<size_t>("progress", 'p', "step of printing progress", false, numeric_limits<size_t>::max());
+    p.add<size_t>("progress", 'p', "step of printing progress", false, 100);
     p.parse_check(argc, argv);
 
     auto weighted = p.get<bool>("weighted");
