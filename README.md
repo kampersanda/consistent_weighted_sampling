@@ -15,7 +15,7 @@ $ make
 ```
 
 The library uses C++17, so please install g++ 7.0 (or greater) or clang 4.0 (or greater).
-Also, CMake 2.8 (or greater) has to be installed to compile the software.
+CMake 2.8 (or greater) has to be installed to compile the software. OpenMP is also used.
 
 ## Input vector file formats supported
 
@@ -184,13 +184,13 @@ Evaluate the recalls for the search results.
 The following output is an example of the obtained result.
 
 ```
-Recall@1:	0.600
-Recall@2:	0.660
-Recall@5:	0.770
-Recall@10:	0.810
-Recall@20:	0.840
-Recall@50:	0.880
-Recall@100:	0.900
+Recall@1:	0.610
+Recall@2:	0.690
+Recall@5:	0.800
+Recall@10:	0.840
+Recall@20:	0.880
+Recall@50:	0.900
+Recall@100:	0.920
 ```
 
 ## References
