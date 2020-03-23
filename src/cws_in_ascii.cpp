@@ -45,7 +45,7 @@ int run(const cmdline::parser& p) {
 #pragma omp section
         generate_random_matrix(gamma_t(2.0, 1.0), C, seed_C);
 #pragma omp section
-        generate_random_matrix(uniform_t(2.0, 1.0), B, seed_B);
+        generate_random_matrix(uniform_t(0.0, 1.0), B, seed_B);
     }
 
     auto dur_cnt = chrono::duration_cast<chrono::seconds>(chrono::system_clock::now() - start_tp).count();
